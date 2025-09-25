@@ -1,0 +1,15 @@
+# ADK Core
+google-adk[all]>=0.1.0
+
+# For Lab 2-8 features
+pydantic>=2.0.0
+
+# Optional: For enhanced functionality
+python-dotenv>=1.0.0
+
+# Optional: For MCP integration (Lab 8)
+# mcp>=0.1.0  # Uncomment when using real MCP servers
+
+# Optional: For LangChain integration examples
+# langchain>=0.1.0
+# langchain-community>=0.1.0

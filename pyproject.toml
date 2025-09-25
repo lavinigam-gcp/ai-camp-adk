@@ -1,0 +1,49 @@
+[project]
+name = "ai-camp-adk"
+version = "1.0.0"
+description = "ADK Training Labs - Building Intelligent Agents"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    # ADK Core
+    "google-adk[all]>=0.1.0",
+
+    # For Lab 2-8 features
+    "pydantic>=2.0.0",
+
+    # For API integration (Lab 2 Tools)
+    "requests>=2.25.0",
+
+    # Environment management
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    # Development tools
+    "pytest>=7.0",
+    "black>=23.0",
+    "ruff>=0.1.0",
+]
+
+mcp = [
+    # For Lab 8 - MCP integration
+    # "mcp>=0.1.0",  # Uncomment when using real MCP servers
+]
+
+langchain = [
+    # For LangChain integration examples
+    # "langchain>=0.1.0",
+    # "langchain-community>=0.1.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=7.0",
+    "black>=23.0",
+    "ruff>=0.1.0",
+]

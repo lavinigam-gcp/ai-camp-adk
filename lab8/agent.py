@@ -1,0 +1,161 @@
+# Lab 8: External Integration - File Manager with MCP (Python Version)
+# This lab demonstrates MCP (Model Context Protocol) integration
+
+from google.adk import Agent
+from google.adk.tools import MCPToolset
+
+# Note: This is a simplified example. In production, you would:
+# 1. Install an MCP server (e.g., @modelcontextprotocol/server-filesystem)
+# 2. Configure the MCP connection properly
+# 3. Handle authentication and permissions
+
+# For demo purposes, we'll create mock file operations
+def list_files(directory: str = ".") -> dict:
+    """
+    List files in a directory (mock implementation).
+
+    Args:
+        directory: Directory path
+
+    Returns:
+        List of files
+    """
+    # Mock file listing
+    return {
+        "directory": directory,
+        "files": [
+            "document1.txt",
+            "report.pdf",
+            "data.csv",
+            "notes.md"
+        ],
+        "subdirectories": ["projects", "archives", "temp"]
+    }
+
+def read_file(filename: str) -> dict:
+    """
+    Read file contents (mock implementation).
+
+    Args:
+        filename: Name of the file
+
+    Returns:
+        File contents
+    """
+    # Mock file reading
+    mock_contents = {
+        "document1.txt": "This is a sample document with important information.",
+        "notes.md": "# Meeting Notes\n\n- Discussed project timeline\n- Reviewed budget",
+        "data.csv": "Name,Age,Department\nAlice,30,Engineering\nBob,25,Marketing"
+    }
+
+    return {
+        "filename": filename,
+        "content": mock_contents.get(filename, "File not found"),
+        "size": len(mock_contents.get(filename, "")),
+        "type": filename.split(".")[-1] if "." in filename else "unknown"
+    }
+
+def write_file(filename: str, content: str) -> dict:
+    """
+    Write content to a file (mock implementation).
+
+    Args:
+        filename: Name of the file
+        content: Content to write
+
+    Returns:
+        Write confirmation
+    """
+    # Mock file writing with confirmation
+    return {
+        "status": "success",
+        "filename": filename,
+        "bytes_written": len(content),
+        "message": f"File '{filename}' has been written successfully",
+        "requires_confirmation": True  # In real MCP, this would trigger confirmation
+    }
+
+def search_files(query: str, file_type: str = None) -> dict:
+    """
+    Search for files matching criteria (mock implementation).
+
+    Args:
+        query: Search query
+        file_type: Optional file type filter
+
+    Returns:
+        Search results
+    """
+    # Mock search results
+    all_files = [
+        {"name": "project_plan.md", "type": "md", "modified": "2024-01-15"},
+        {"name": "budget_2024.xlsx", "type": "xlsx", "modified": "2024-01-10"},
+        {"name": "meeting_notes.txt", "type": "txt", "modified": "2024-01-20"}
+    ]
+
+    results = [f for f in all_files if query.lower() in f["name"].lower()]
+    if file_type:
+        results = [f for f in results if f["type"] == file_type]
+
+    return {
+        "query": query,
+        "results": results,
+        "count": len(results)
+    }
+
+# Create file manager agent with MCP-style integration
+root_agent = Agent(
+    model="gemini-2.5-flash",
+    name="file_manager",
+    description="File system manager with safe operations and MCP integration patterns",
+
+    instruction="""
+    You are a File System Manager with careful operation handling.
+
+    Your capabilities:
+    1. **List Files**: Browse directories and show contents
+    2. **Read Files**: Access and display file contents
+    3. **Write Files**: Create or update files (with confirmation)
+    4. **Search Files**: Find files by name or type
+
+    Safety protocols:
+    - Always confirm before write operations
+    - Validate file paths and names
+    - Check file types before operations
+    - Log all operations for audit
+
+    MCP Integration patterns:
+    - Tools are exposed through a protocol
+    - Operations can require confirmation
+    - State is maintained across operations
+    - Async operations are supported
+
+    When users request file operations:
+    1. Clarify the exact operation needed
+    2. Validate parameters
+    3. Execute with appropriate tool
+    4. Confirm results
+    5. Suggest related operations
+
+    Best practices:
+    - Use descriptive file names
+    - Organize files in appropriate directories
+    - Regular backups recommended
+    - Check file permissions
+    """,
+
+    # File operation tools (MCP-style)
+    tools=[
+        list_files,
+        read_file,
+        write_file,
+        search_files
+    ],
+
+    # Tool confirmation for dangerous operations
+    tool_confirmation={
+        "write_file": "This will modify the file system. Proceed?",
+        "delete_file": "This will permanently delete the file. Are you sure?"
+    }
+)

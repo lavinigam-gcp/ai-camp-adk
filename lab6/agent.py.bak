@@ -1,0 +1,107 @@
+# Lab 6: Workflow Orchestration - Document Pipeline (Python Version)
+# This lab demonstrates sequential, parallel, and loop workflow agents
+
+from google.adk import Agent
+from google.adk.agents import SequentialAgent, ParallelAgent, LoopAgent
+
+# Document Extractor Agent
+extractor_agent = Agent(
+    model="gemini-2.0-flash",
+    name="extractor",
+    description="Extracts and structures text from documents",
+    instruction="""
+    Extract key information from the provided text.
+    Identify: main topics, key points, important dates, and entities.
+    Structure the output clearly.
+    """,
+    output_key="extracted_data"
+)
+
+# Sentiment Analyzer Agent
+sentiment_agent = Agent(
+    model="gemini-2.0-flash",
+    name="sentiment_analyzer",
+    description="Analyzes sentiment and tone",
+    instruction="""
+    Analyze the sentiment of the text: {extracted_data}
+    Identify: overall tone, emotional content, and bias.
+    Rate positivity (1-10) and provide reasoning.
+    """,
+    output_key="sentiment_analysis"
+)
+
+# Fact Checker Agent
+fact_checker_agent = Agent(
+    model="gemini-2.0-flash",
+    name="fact_checker",
+    description="Verifies factual claims",
+    instruction="""
+    Review the extracted data: {extracted_data}
+    Identify claims that need verification.
+    Flag potential inaccuracies.
+    """,
+    output_key="fact_check_results"
+)
+
+# Quality Refiner Agent (for loop)
+refiner_agent = Agent(
+    model="gemini-2.0-flash",
+    name="refiner",
+    description="Improves document quality iteratively",
+    instruction="""
+    Review and improve the document quality.
+    Current version: {document_version}
+    Make it clearer, more concise, and more engaging.
+    Rate quality (1-10) and provide improved version.
+    """,
+    output_key="refined_document"
+)
+
+# Parallel Processing: Sentiment + Fact Checking
+parallel_analyzer = ParallelAgent(
+    name="parallel_analyzer",
+    description="Runs sentiment and fact checking in parallel",
+    sub_agents=[sentiment_agent, fact_checker_agent]
+)
+
+# Loop Processing: Iterative Refinement
+loop_refiner = LoopAgent(
+    name="quality_loop",
+    description="Refines document until quality threshold met",
+    sub_agents=[refiner_agent],
+    max_iterations=3  # Maximum 3 refinement passes
+)
+
+# Sequential Pipeline: Extract → Parallel Analysis → Loop Refinement
+document_pipeline = SequentialAgent(
+    name="document_pipeline",
+    description="Complete document processing pipeline",
+    sub_agents=[extractor_agent, parallel_analyzer, loop_refiner]
+)
+
+# Root Orchestrator Agent
+root_agent = Agent(
+    model="gemini-2.0-flash",
+    name="pipeline_orchestrator",
+    description="Orchestrates the document processing pipeline",
+    instruction="""
+    You are the Document Pipeline Orchestrator.
+
+    Your workflow types:
+    1. **Sequential**: Extract → Analyze → Refine (in order)
+    2. **Parallel**: Sentiment + Fact Check (simultaneously)
+    3. **Loop**: Refine until quality threshold (iterative)
+
+    When given a document:
+    1. Explain the pipeline stages
+    2. Delegate to the document_pipeline
+    3. Monitor progress at each stage
+    4. Present final results with insights
+
+    Highlight how different workflow types contribute:
+    - Sequential ensures proper data flow
+    - Parallel saves time on independent tasks
+    - Loop ensures quality through iteration
+    """,
+    sub_agents=[document_pipeline]
+)
