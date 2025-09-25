@@ -88,15 +88,17 @@ Visit http://localhost:8000 and select any lab from the dropdown!
 
 ### Lab 3: Multi-Agent Collaboration - Blog Team 👥
 **Time:** 8 mins | **Complexity:** ⭐⭐⭐
-- Build specialized sub-agents
-- Implement agent delegation
-- Pass data between agents
+- Build specialized sub-agents (Writer, Editor)
+- Implement agent delegation patterns
+- Coordinate team workflows without tools
+- **Key Pattern:** Root agent coordinates, sub-agents specialize
 
 ### Lab 3 Config: Blog Team (YAML Configuration) 📝⚙️
 **Time:** 8 mins | **Complexity:** ⭐⭐⭐
-- Master YAML-based configuration
-- Complex multi-agent in pure config
+- Same multi-agent system in pure YAML
+- Configuration-driven agent definitions
 - Compare code vs configuration approaches
+- **Architecture:** Clean separation of roles
 
 ### Lab 4: Structured Data - Restaurant Orders 🍽️
 **Time:** 7 mins | **Complexity:** ⭐⭐⭐
@@ -223,10 +225,26 @@ agent = Agent(
 
 ### Multi-Agent Systems
 ```python
+# Key Pattern: Root agent coordinates, sub-agents specialize
 root_agent = Agent(
-    sub_agents=[researcher, writer, editor]
+    name="team_lead",
+    sub_agents=[writer_agent, editor_agent],  # Specialized roles
+    instruction="Coordinate the team workflow..."
+)
+
+# Sub-agents focus on single responsibilities
+writer_agent = Agent(
+    name="writer",
+    instruction="Create engaging content...",
+    output_key="draft_content"  # Pass data between agents
 )
 ```
+
+**Multi-Agent Architecture Patterns:**
+- **Coordinator Pattern**: Root agent manages workflow, delegates tasks
+- **Specialist Pattern**: Each sub-agent has one clear responsibility
+- **Data Flow**: Use `output_key` to pass results between agents
+- **No Tools on Sub-Agents**: Keep tools on root agent to avoid conflicts
 
 ## 🛠️ Development Tips
 

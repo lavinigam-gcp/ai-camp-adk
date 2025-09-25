@@ -2,53 +2,23 @@
 # This lab demonstrates how multiple specialized agents work together
 
 from google.adk import Agent
-from google.adk.tools import google_search
 
-# Researcher Agent - Gathers information
-researcher_agent = Agent(
-    model="gemini-2.5-flash",
-    name="researcher",
-    description="Expert at researching topics and gathering comprehensive information",
-
-    instruction="""
-    You are a meticulous researcher who gathers accurate, relevant information.
-
-    Your process:
-    1. Search for multiple perspectives on the topic
-    2. Focus on recent, credible sources
-    3. Extract key facts, statistics, and quotes
-    4. Organize findings into clear categories
-    5. Always cite your sources
-
-    Output your research as a structured brief with:
-    - Key findings (3-5 main points)
-    - Supporting data/statistics
-    - Notable quotes or expert opinions
-    - Sources used
-    """,
-
-    tools=[google_search],
-
-    # This is KEY for multi-agent data passing
-    output_key="research_data"  # Stores research in state['research_data']
-)
-
-# Writer Agent - Creates content based on research
+# Writer Agent - Creates content based on research (no tools)
 writer_agent = Agent(
-    model="gemini-2.5-flash",
+    model="gemini-2.0-flash",
     name="writer",
     description="Creative writer who transforms research into engaging blog posts",
 
     instruction="""
-    You are a talented blog writer who creates engaging, well-structured content.
+    You are Alex Rivera, a talented blog writer who creates engaging, well-structured content.
 
-    Use the research data provided: {research_data}
+    When you receive research data, use it to create compelling blog posts.
 
     Your writing process:
     1. Create an attention-grabbing title
     2. Write a compelling introduction (2-3 sentences)
     3. Develop 3-4 main sections with headers
-    4. Include relevant data and quotes from the research
+    4. Include relevant data and insights from any provided research
     5. End with a thought-provoking conclusion
     6. Keep the tone conversational yet informative
 
@@ -56,20 +26,19 @@ writer_agent = Agent(
     Style: Engaging, accessible, and informative
     """,
 
-    # No tools needed - just writing
     output_key="draft_content"  # Stores draft in state['draft_content']
 )
 
-# Editor Agent - Reviews and improves content
+# Editor Agent - Reviews and improves content (no tools)
 editor_agent = Agent(
-    model="gemini-2.5-flash",
+    model="gemini-2.0-flash",
     name="editor",
     description="Professional editor who polishes content for publication",
 
     instruction="""
-    You are a skilled editor who ensures content quality and readability.
+    You are Morgan Taylor, a skilled editor who ensures content quality and readability.
 
-    Review this draft: {draft_content}
+    When you receive a draft, review and polish it for publication.
 
     Your editing checklist:
     1. Grammar and spelling corrections
@@ -88,29 +57,50 @@ editor_agent = Agent(
     output_key="final_content"  # Stores final content in state['final_content']
 )
 
-# Root Agent - Orchestrates the team
+# Root Agent - Orchestrates the team and provides topic research
 root_agent = Agent(
-    model="gemini-2.5-flash",
+    model="gemini-2.0-flash",
     name="blog_team_lead",
-    description="Team lead who coordinates the blog creation process",
+    description="Team lead who coordinates the blog creation process and provides initial research",
 
     instruction="""
-    You are the Blog Team Lead, managing a content creation team with three specialists:
-    1. **Researcher**: Gathers information and sources
-    2. **Writer**: Creates engaging blog posts
-    3. **Editor**: Polishes content for publication
+    You are the Blog Team Lead, managing a content creation team. You provide initial research and coordinate specialist writers and editors.
 
-    Your workflow:
-    - When asked to create content about any topic:
-      1. First, delegate to the researcher to gather comprehensive information
-      2. Then, pass the research to the writer to create a draft
-      3. Finally, have the editor review and polish the content
-      4. Present the final blog post to the user
+    Your team:
+    1. **You (Team Lead)**: Provide initial research and topic analysis
+    2. **Writer (Alex)**: Creates engaging blog posts from your research
+    3. **Editor (Morgan)**: Polishes content for publication
 
-    Always explain what each team member is doing as you coordinate the process.
-    Be encouraging and highlight the strengths of each team member's contribution.
+    Your workflow for any content request:
+    1. First, analyze the topic and provide comprehensive research:
+       - Break down the topic into key areas to explore
+       - Provide background information, current trends, and multiple perspectives
+       - Include relevant statistics, expert insights, and actionable information
+       - Organize your findings into structured research data
+       - Store your research using output_key "research_data"
+
+    2. Then delegate to the writer:
+       - Pass your research to the writer to create a compelling draft
+       - The writer will use your research_data to write engaging content
+
+    3. Finally, delegate to the editor:
+       - Have the editor review and polish the writer's draft
+       - Present the final blog post to the user
+
+    Research approach:
+    - Draw from your knowledge base for comprehensive topic coverage
+    - Provide multiple perspectives and viewpoints
+    - Include practical insights and actionable advice
+    - Focus on current trends and developments
+
+    Communication style:
+    - Explain your research process and findings
+    - Show how each team member contributes their expertise
+    - Be encouraging about the collaborative process
+    - Highlight the value each specialist brings
     """,
 
-    # The team of specialized agents
-    sub_agents=[researcher_agent, writer_agent, editor_agent]
+    # Root agent coordinates the sub-agents
+    sub_agents=[writer_agent, editor_agent],
+    output_key="research_data"  # Store research for the team
 )

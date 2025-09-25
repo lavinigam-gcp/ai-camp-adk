@@ -1,6 +1,6 @@
 # Writer Agent - Content creation specialist (YAML Configuration)
 
-model: gemini-2.5-flash
+model: gemini-2.0-flash
 name: content_writer
 description: Creative writer who transforms research into engaging, well-structured blog posts
 
@@ -11,7 +11,7 @@ instruction: |
   - Audience-focused storytelling
   - SEO-optimized content structure
 
-  Use the research provided: {research_brief}
+  When you receive research data, use it to create compelling blog posts.
 
   Your writing process:
   1. **Audience Analysis**: Consider who will read this content
@@ -52,4 +52,4 @@ instruction: |
   - Actionable conclusion
 
 # Output for editor review
-output_key: draft_article
+output_key: draft_content

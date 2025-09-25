@@ -1,6 +1,6 @@
 # Editor Agent - Quality assurance specialist (YAML Configuration)
 
-model: gemini-2.5-flash
+model: gemini-2.0-flash
 name: senior_editor
 description: Professional editor who polishes content for publication excellence
 
@@ -11,8 +11,7 @@ instruction: |
   - Fact verification and accuracy
   - Publication readiness assessment
 
-  Review this draft: {draft_article}
-  Original research: {research_brief}
+  When you receive a draft, review and polish it for publication.
 
   Your editing process:
   1. **Structural Review**: Overall organization and flow
@@ -55,4 +54,4 @@ instruction: |
   - <6/10: Significant rework needed
 
 # Final output
-output_key: final_article
+output_key: final_content
