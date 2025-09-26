@@ -100,11 +100,19 @@ Visit http://localhost:8000 and select any lab from the dropdown!
 - Compare code vs configuration approaches
 - **Architecture:** Clean separation of roles
 
-### Lab 4: Structured Data - Restaurant Orders 🍽️
-**Time:** 7 mins | **Complexity:** ⭐⭐⭐
-- Use Pydantic schemas
-- Validate input/output
-- Handle complex data structures
+### Lab 4a: Input Schema Validation - Order Processing 📝
+**Time:** 4 mins | **Complexity:** ⭐⭐
+- Validate incoming data structure with `input_schema`
+- Ensure required fields are present
+- Type safety and data validation
+- **Pattern:** Structured input processing
+
+### Lab 4b: Output Schema Validation - Weather Data ☀️
+**Time:** 4 mins | **Complexity:** ⭐⭐
+- Guarantee structured JSON responses with `output_schema`
+- Consistent field formatting
+- Predictable API responses
+- **Pattern:** Reliable data output format
 
 ### Lab 5: Stateful Conversations - Learning Tutor 🎓
 **Time:** 8 mins | **Complexity:** ⭐⭐⭐
@@ -114,21 +122,24 @@ Visit http://localhost:8000 and select any lab from the dropdown!
 
 ### Lab 6: Workflow Orchestration - Document Pipeline 📄
 **Time:** 8 mins | **Complexity:** ⭐⭐⭐⭐
-- Sequential processing
-- Parallel execution
-- Loop workflows
+- Use `SequentialAgent` for ordered processing
+- Use `ParallelAgent` for concurrent execution
+- Use `LoopAgent` for iterative refinement
+- **Pattern:** Complex workflow coordination
 
-### Lab 7: Callbacks & Events - Service Monitor 📊
+### Lab 7: Callbacks & Events - Customer Service Monitor 📊
 **Time:** 7 mins | **Complexity:** ⭐⭐⭐⭐
-- Hook into agent lifecycle
-- Track performance metrics
-- Monitor sentiment
+- Monitor agent lifecycle with callbacks
+- Track performance metrics and timing
+- Implement before/after hooks for tools and models
+- **Pattern:** Agent monitoring and analytics
 
 ### Lab 8: External Integration - File Manager 📁
 **Time:** 8 mins | **Complexity:** ⭐⭐⭐⭐⭐
-- MCP integration patterns
-- Tool confirmation
-- External service access
+- Integrate external systems via MCP (Model Context Protocol)
+- Handle file operations with external tools
+- Demonstrate tool confirmation patterns
+- **Pattern:** External service integration
 
 ## 🎮 Running Labs
 
@@ -312,8 +323,9 @@ python -c "from google import genai; genai.configure(api_key='YOUR_KEY'); print(
 - Multi-agent systems (Lab 3)
 - Configuration approach (Lab 3 Config)
 
-### Intermediate Labs (15 mins) - Labs 4-5
-- Structured data and schemas (Lab 4)
+### Intermediate Labs (16 mins) - Labs 4a, 4b, 5
+- Input validation (Lab 4a)
+- Output validation (Lab 4b)
 - State management and memory (Lab 5)
 
 ### Advanced Labs (18 mins) - Labs 6-8
@@ -334,6 +346,59 @@ By completing these labs, you've learned:
 - ✅ Integrating external services
 
 You're now ready to build production-ready AI agents with ADK!
+
+## 🧪 Quick Test Examples
+
+### Lab 1: Basic Agent
+- "Can you recommend a coffee for someone who likes strong flavors?"
+- "What pastries do you have available?"
+
+### Lab 1 Live: Voice Assistant
+- Enable microphone and speak: "What's your most popular drink?"
+- Try voice commands for natural conversation
+
+### Lab 2 Search: Web Search
+- "What are the latest developments in AI?"
+- "Search for information about quantum computing"
+
+### Lab 2 Tools: Multi-Tool Assistant
+- "Calculate a 18% tip on $45.67"
+- "Convert 100 USD to EUR"
+- "Generate a secure password"
+
+### Lab 3: Multi-Agent Blog Team
+- "Write a blog post about remote work benefits"
+- "Create an article about sustainable technology trends"
+
+### Lab 4a: Input Schema Validation
+```json
+{
+  "customer_name": "Sarah",
+  "items": "1 Pizza, 2 Coffee",
+  "order_type": "takeout",
+  "dietary_restrictions": "vegetarian"
+}
+```
+
+### Lab 4b: Output Schema Validation
+- "What's the weather in San Jose?"
+- "Give me weather data for Cupertino"
+
+### Lab 5: Stateful Learning Tutor
+- "I want to learn Python programming"
+- "Can you help me with machine learning basics?"
+
+### Lab 6: Workflow Orchestration
+- "Process this document: [paste any text]"
+- Demonstrates sequential → parallel → loop processing
+
+### Lab 7: Callbacks & Monitoring
+- "I have a complaint about my order"
+- Watch the callback metrics in the logs
+
+### Lab 8: External Integration
+- "List the files in my directory"
+- "Help me organize my documents"
 
 ## 🤝 Contributing
 
